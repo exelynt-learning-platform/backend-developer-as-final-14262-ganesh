@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long>, JpaSpecificationExecutor<Reservation> {
 
+    // Overlap condition:
+    // Existing reservation overlaps if its start is before requested end AND its end is after requested start
     @Query("SELECT COUNT(r) > 0 FROM Reservation r " +
            "WHERE r.resource.id = :resourceId " +
            "AND r.status != :excludedStatus " +
@@ -23,6 +25,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
                               @Param("endTime") LocalDateTime endTime,
                               @Param("excludedStatus") ReservationStatus excludedStatus);
 
+    // Overlap check for updates: excludes the current reservation's own ID
     @Query("SELECT COUNT(r) > 0 FROM Reservation r " +
            "WHERE r.resource.id = :resourceId " +
            "AND r.id != :excludeId " +
