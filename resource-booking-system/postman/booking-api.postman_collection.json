@@ -1,0 +1,342 @@
+{
+  "info": {
+    "name": "Resource Booking System API",
+    "description": "Postman collection for Resource Booking System with JWT Authentication, Resources, and Reservations endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login - Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Admin@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login - User 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"user1\",\n  \"password\": \"User@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resources",
+      "item": [
+        {
+          "name": "Get All Resources",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/resources",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "resources"]
+            }
+          }
+        },
+        {
+          "name": "Get Resource By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/resources/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "resources", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Resource (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Innovation Lab\",\n  \"type\": \"ROOM\",\n  \"description\": \"Equipped with 3D printers and VR headsets\",\n  \"available\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resources",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "resources"]
+            }
+          }
+        },
+        {
+          "name": "Update Resource (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Conference Room A (Renovated)\",\n  \"type\": \"ROOM\",\n  \"description\": \"Upgraded with 8K displays and acoustics\",\n  \"available\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resources/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "resources", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Resource (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/resources/3",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "resources", "3"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "item": [
+        {
+          "name": "Create Reservation (User)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceId\": 1,\n  \"startTime\": \"2026-10-01T10:00:00\",\n  \"endTime\": \"2026-10-01T12:00:00\",\n  \"price\": 150.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations"]
+            }
+          }
+        },
+        {
+          "name": "Get Reservations (With Pagination & Filters)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations?status=PENDING&minPrice=50.00&maxPrice=300.00&page=0&size=10&sortBy=createdAt&direction=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations"],
+              "query": [
+                { "key": "status", "value": "PENDING" },
+                { "key": "minPrice", "value": "50.00" },
+                { "key": "maxPrice", "value": "300.00" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" },
+                { "key": "sortBy", "value": "createdAt" },
+                { "key": "direction", "value": "desc" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Reservation By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Reservation (Cancel as User)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CANCELLED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Reservation (Confirm as Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CONFIRMED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Reservation (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
