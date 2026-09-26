@@ -69,4 +69,15 @@ class JwtUtilTest {
 
         assertFalse(expiredJwtUtil.validateToken(expiredToken));
     }
+
+    @Test
+    @DisplayName("Should support runtime generated key when secret is null or blank")
+    void testRuntimeKeyGenerationWhenSecretBlank() {
+        JwtUtil defaultJwtUtil = new JwtUtil("", EXPIRATION_MS);
+        String token = defaultJwtUtil.generateToken("ephemeralUser", "USER");
+
+        assertTrue(defaultJwtUtil.validateToken(token));
+        assertEquals("ephemeralUser", defaultJwtUtil.extractUsername(token));
+        assertEquals("USER", defaultJwtUtil.extractRole(token));
+    }
 }

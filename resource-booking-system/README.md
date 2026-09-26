@@ -38,8 +38,8 @@ This starts MySQL 8.0 on port `3306` with database `booking_db`, user `root`, an
 |---|---|---|
 | `DB_URL` | JDBC connection URL for MySQL | `jdbc:mysql://localhost:3306/booking_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC` |
 | `DB_USERNAME` | Database username | `root` |
-| `DB_PASSWORD` | Database password | `ganesh` |
-| `JWT_SECRET` | Secret key for signing HS256 JWT tokens (>= 32 chars) | `404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970` |
+| `DB_PASSWORD` | Database password | Environment variable override (`${DB_PASSWORD:}`) |
+| `JWT_SECRET` | Secret key for signing HS256 JWT tokens (>= 32 chars) | Secure runtime key (or provide via `${JWT_SECRET:}`) |
 | `JWT_EXPIRATION_MS` | JWT validity duration in milliseconds | `3600000` (1 hour) |
 
 ---

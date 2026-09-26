@@ -161,29 +161,41 @@ public class ReservationService {
             throw new ForbiddenException("Access denied: you do not own this reservation");
         }
 
-        if (!isAdmin) {
-            // USER restrictions
-            if (request.getPrice() != null && request.getPrice().compareTo(reservation.getPrice()) != 0) {
-                throw new BadRequestException("Users are not allowed to modify reservation price");
-            }
-            if (request.getStatus() != null) {
-                if (request.getStatus() == ReservationStatus.CONFIRMED) {
-                    throw new BadRequestException("Users cannot confirm reservations");
-                } else if (request.getStatus() == ReservationStatus.CANCELLED) {
-                    reservation.setStatus(ReservationStatus.CANCELLED);
-                }
-            }
+        if (isAdmin) {
+            applyAdminUpdates(reservation, request);
         } else {
-            // ADMIN full update
-            if (request.getPrice() != null) {
-                reservation.setPrice(request.getPrice());
-            }
-            if (request.getStatus() != null) {
-                reservation.setStatus(request.getStatus());
-            }
+            applyUserUpdates(reservation, request);
         }
 
-        // Time range updates
+        updateTimeRange(reservation, request);
+
+        Reservation updated = reservationRepository.save(reservation);
+        return mapToResponse(updated);
+    }
+
+    private void applyAdminUpdates(Reservation reservation, UpdateReservationRequest request) {
+        if (request.getPrice() != null) {
+            reservation.setPrice(request.getPrice());
+        }
+        if (request.getStatus() != null) {
+            reservation.setStatus(request.getStatus());
+        }
+    }
+
+    private void applyUserUpdates(Reservation reservation, UpdateReservationRequest request) {
+        if (request.getPrice() != null && request.getPrice().compareTo(reservation.getPrice()) != 0) {
+            throw new BadRequestException("Users are not allowed to modify reservation price");
+        }
+        if (request.getStatus() != null) {
+            if (request.getStatus() == ReservationStatus.CONFIRMED) {
+                throw new BadRequestException("Users cannot confirm reservations");
+            } else if (request.getStatus() == ReservationStatus.CANCELLED) {
+                reservation.setStatus(ReservationStatus.CANCELLED);
+            }
+        }
+    }
+
+    private void updateTimeRange(Reservation reservation, UpdateReservationRequest request) {
         LocalDateTime newStart = request.getStartTime() != null ? request.getStartTime() : reservation.getStartTime();
         LocalDateTime newEnd = request.getEndTime() != null ? request.getEndTime() : reservation.getEndTime();
 
@@ -207,9 +219,6 @@ public class ReservationService {
             reservation.setStartTime(newStart);
             reservation.setEndTime(newEnd);
         }
-
-        Reservation updated = reservationRepository.save(reservation);
-        return mapToResponse(updated);
     }
 
     @Transactional

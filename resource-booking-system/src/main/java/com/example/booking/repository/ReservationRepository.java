@@ -2,16 +2,24 @@ package com.example.booking.repository;
 
 import com.example.booking.entity.Reservation;
 import com.example.booking.entity.ReservationStatus;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long>, JpaSpecificationExecutor<Reservation> {
+
+    @Override
+    @NonNull
+    @EntityGraph(attributePaths = {"user", "resource"})
+    Optional<Reservation> findById(@NonNull Long id);
 
     // Overlap condition:
     // Existing reservation overlaps if its start is before requested end AND its end is after requested start
