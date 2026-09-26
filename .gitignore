@@ -34,4 +34,6 @@ build/
 ### Logs & Temp ###
 *.log
 *.tmp
+*.zip
+JAVA_BACKEND_INTERVIEW_QUESTIONS_AND_ANSWERS.txt
 mvn.cmd

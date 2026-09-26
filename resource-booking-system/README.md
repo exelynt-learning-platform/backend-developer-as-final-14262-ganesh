@@ -7,7 +7,7 @@ A production-style, high-performance REST API for managing bookable resources (e
 ## Tech Stack
 - **Language**: Java 21 (LTS)
 - **Framework**: Spring Boot 3.3.5 (Spring Web, Spring Data JPA, Spring Security, Bean Validation)
-- **Database**: PostgreSQL (Production/Dev), H2 In-Memory (Test profile)
+- **Database**: MySQL 8.0+ (Production/Dev), H2 In-Memory (Test profile)
 - **Security**: Stateless JWT with HMAC-SHA256 (`jjwt 0.12.6`), BCrypt password hashing
 - **API Documentation**: SpringDoc OpenAPI 2.6.0 (Swagger UI at `/swagger-ui/index.html`)
 - **Testing**: JUnit 5, Mockito, Spring Boot Test, MockMvc, `spring-security-test`, DataJpaTest
@@ -18,17 +18,17 @@ A production-style, high-performance REST API for managing bookable resources (e
 ## Prerequisites
 - **Java 21** or higher (`java -version`)
 - **Maven 3.9+** (`mvn -version`)
-- **Docker & Docker Compose** (for running PostgreSQL container) or an external PostgreSQL instance
+- **Docker & Docker Compose** (for running MySQL container) or an external MySQL instance
 
 ---
 
 ## Database Setup & Docker Compose
 
-To spin up a local PostgreSQL database instance:
+To spin up a local MySQL database instance:
 ```bash
 docker-compose up -d
 ```
-This starts PostgreSQL 16 on port `5432` with database `booking_db`, user `postgres`, and password `postgres`.
+This starts MySQL 8.0 on port `3306` with database `booking_db`, user `root`, and password `ganesh`.
 
 ---
 
@@ -36,9 +36,9 @@ This starts PostgreSQL 16 on port `5432` with database `booking_db`, user `postg
 
 | Variable | Description | Default Value |
 |---|---|---|
-| `DB_URL` | JDBC connection URL for PostgreSQL | `jdbc:postgresql://localhost:5432/booking_db` |
-| `DB_USERNAME` | Database username | `postgres` |
-| `DB_PASSWORD` | Database password | `postgres` |
+| `DB_URL` | JDBC connection URL for MySQL | `jdbc:mysql://localhost:3306/booking_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC` |
+| `DB_USERNAME` | Database username | `root` |
+| `DB_PASSWORD` | Database password | `ganesh` |
 | `JWT_SECRET` | Secret key for signing HS256 JWT tokens (>= 32 chars) | `404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970` |
 | `JWT_EXPIRATION_MS` | JWT validity duration in milliseconds | `3600000` (1 hour) |
 
@@ -46,7 +46,7 @@ This starts PostgreSQL 16 on port `5432` with database `booking_db`, user `postg
 
 ## How to Run
 
-### 1. Start PostgreSQL
+### 1. Start MySQL
 ```bash
 docker-compose up -d
 ```
